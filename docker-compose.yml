@@ -1,0 +1,32 @@
+# used to define different services(i.e. containers)
+
+services:
+  node_app:
+    container_name: node_app
+    build: .
+    image: sweekarbangera/node_live_app
+    ports:
+      - "3000:3000"
+    environment:
+      - PG_DB=node_live_db
+      - PG_USER=sweekar
+      - PG_PASSWORD=12345
+      - PG_HOST=node_db   # Name of the container/service
+    depends_on:
+      - node_db
+    restart: always
+
+  node_db:    # service name
+    container_name: node_db   # container name is can be different than above service name
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=node_live_db
+      - POSTGRES_USER=sweekar
+      - POSTGRES_PASSWORD=12345
+    volumes:    # to keep the data persistance with containers
+      - node_db_data:/var/lib/postgresql/data
+
+volumes:
+  node_db_data: {}
