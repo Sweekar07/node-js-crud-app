@@ -103,5 +103,37 @@ export function deleteGadget (req, res) {
     .catch(err => { console.log("Error while deleting the user:\n", err)});
 }
 
-const controller = { getAllGadgets, getGadgetById, createGadget, updateGadget, deleteGadget };
+// Self-destruct sequence
+export async function selfDestructGadget(req, res) {
+    const gadgetId = req.params.id;
+    const { confirmationCode } = req.body;
+
+    // Simulate confirmation code check (you can customize this logic)
+    const expectedConfirmationCode = '1234'; // Replace with your logic to generate or verify the code
+    if (confirmationCode !== expectedConfirmationCode) {
+        return res.status(400).json({ message: 'Invalid confirmation code!' });
+    }
+
+    try {
+        const gadget = await Gadgets.findByPk(gadgetId);
+        if (!gadget) {
+            return res.status(404).json({ message: 'Gadget not found!' });
+        }
+
+        // Perform self-destruct logic
+        gadget.status = 'Destroyed';
+        gadget.decommissionedTimestamp = new Date().toISOString();
+        await gadget.save();
+
+        res.status(200).json({
+            message: 'Gadget self-destruct sequence initiated successfully!',
+            gadget: gadget
+        });
+    } catch (err) {
+        console.log("Error while initiating self-destruct sequence:\n", err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const controller = { getAllGadgets, getGadgetById, createGadget, updateGadget, deleteGadget, selfDestructGadget };
 export { controller };
