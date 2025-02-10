@@ -2,7 +2,8 @@
 
 import { Gadgets } from '../models/gadget.js';
 import { v4 as uuidv4 } from 'uuid';
-
+import { Status } from '../enums/status.js'
+import { generateCodename, generateSuccessProbability } from '../helpers/gadgetHelpers.js'
 
 // Crud Operations
 
@@ -26,19 +27,6 @@ export function getGadgetById(req, res) {
     .catch(err => console.log("Error while retrieving gadget Id:\n", err))
 }
 
-function generateCodename() {
-    const adjectives = ['The', 'Mysterious', 'Silent', 'Fierce', 'Swift'];
-    const nouns = ['Nightingale', 'Kraken', 'Phoenix', 'Shadow', 'Whisper'];
-    const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-    const noun = nouns[Math.floor(Math.random() * nouns.length)];
-    return `${adj} ${noun}`;
-  }
-
-// Helper function to generate a random success probability
-function generateSuccessProbability() {
-    return Math.floor(Math.random() * 100) + 1;
-  }
-
 // Create gadget
 export function createGadget(req, res) {
     const name = req.body.name;
@@ -46,7 +34,7 @@ export function createGadget(req, res) {
         id: uuidv4(),
         name: name,
         codename: generateCodename(),
-        status: 'Available',
+        status: Status.AVAILABLE,
         successProbability: generateSuccessProbability(),
         decommissionedTimestamp: null
     }).then(result => {
@@ -62,25 +50,34 @@ export function createGadget(req, res) {
 }
 
 // Update the gadget
-export function updateGadget (req, res) {
+export async function updateGadget (req, res) {
     const gadgetId = req.params.id;
-    const name = req.body.name;
-    const status = req.body.status;
-    
-    Gadgets.findByPk(gadgetId).then(gadget => {
+    const { name, status } = req.body;
+
+    // Validate the status
+    const validStatuses = Object.values(Status);
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ message: 'Invalid status value!' });
+    }
+
+    try {
+        const gadget = await Gadgets.findByPk(gadgetId);
         if (!gadget) {
             return res.status(404).json({ message: 'Gadget not found!' });
         }
+        
         gadget.name = name;
         gadget.status = status;
-        return gadget.save();
-    }).then(result => {
+        await gadget.save();
+
         res.status(200).json({ 
             message: 'Gadget details updated successfully!',
             gadget: result
-         })
-    })
-    .catch(err => { console.log("Error while updating the user:\n", err)});
+        });
+    } catch (err) {
+        console.log("Error while updating the gadget:\n", err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
 // delete the gadget
@@ -91,7 +88,7 @@ export function deleteGadget (req, res) {
         if (!gadget) {
             return res.status(404).json({ message: 'Gadget not found!' });
         }
-        gadget.status = 'Decommissioned';
+        gadget.status = Status.DECOMMISSIONED;
         gadget.decommissionedTimestamp = new Date().toISOString();
         return gadget.save();
     }).then(result => {
@@ -121,7 +118,7 @@ export async function selfDestructGadget(req, res) {
         }
 
         // Perform self-destruct logic
-        gadget.status = 'Destroyed';
+        gadget.status = Status.DESTROYED;
         gadget.decommissionedTimestamp = new Date().toISOString();
         await gadget.save();
 

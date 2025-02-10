@@ -2,7 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 const { json, urlencoded } = bodyParser;
 import sequelize from './util/database.js';
+import { router as authRouter } from './routes/auth_routes.js';
 import { router as gadgetsRoutes } from './routes/gadgets_routes.js';
+import { router as userRoutes } from './routes/user_routes.js'
 
 const app = express();
 
@@ -20,7 +22,11 @@ app.get('/', (req, res, next) => {
     res.send('Hello world!')
 });
 
-// Crud routes
+// auth routes
+app.use('/api/auth', authRouter);
+// User routes
+app.use('/api', userRoutes);
+// CRUD routes
 app.use('', gadgetsRoutes); // imported the routes.
 
 
