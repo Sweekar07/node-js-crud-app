@@ -7,11 +7,8 @@ services:
     image: sweekarbangera/node_live_app
     ports:
       - "3000:3000"
-    environment:
-      - PG_DB=node_live_db
-      - PG_USER=sweekar
-      - PG_PASSWORD=12345
-      - PG_HOST=node_db   # Name of the container/service
+    env_file:
+      - .env
     depends_on:
       - node_db
     restart: always
@@ -21,10 +18,8 @@ services:
     image: postgres
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_DB=node_live_db
-      - POSTGRES_USER=sweekar
-      - POSTGRES_PASSWORD=12345
+    env_file:
+      - .env
     volumes:    # to keep the data persistance with containers
       - node_db_data:/var/lib/postgresql/data
 
