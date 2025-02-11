@@ -9,10 +9,21 @@ import { generateCodename, generateSuccessProbability } from '../helpers/gadgetH
 
 // Retrieve a list of all gadgets from db
 export function getAllGadgets(req, res) {
-    Gadgets.findAll().then(gadgets => {
-        res.status(200).json({ gadgets: gadgets})
-    })
-    .catch(err => console.log("Error while retrieving all gadgets:\n", err))
+    const status = req.query.status;
+    if (!status) {
+        Gadgets.findAll().then(gadgets => {
+            res.status(200).json({ gadgets: gadgets})
+        })
+        .catch(err => console.log("Error while retrieving all gadgets:\n", err))
+    } else {
+        // Filter gadgets by status
+        Gadgets.findAll({
+            where: { status: status }
+        }).then(gadgets => {
+            res.status(200).json({ gadgets: gadgets })
+        })
+        .catch(err => console.log("Error while retrieving gadgets with status:\n", err))
+    }
 }
 
 // Retrieve by gadget id
@@ -72,7 +83,7 @@ export async function updateGadget (req, res) {
 
         res.status(200).json({ 
             message: 'Gadget details updated successfully!',
-            gadget: result
+            gadget: gadget
         });
     } catch (err) {
         console.log("Error while updating the gadget:\n", err);
