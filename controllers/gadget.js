@@ -115,7 +115,7 @@ class GadgetController  {       // class-based structure for better organization
             }
 
             if (!Object.values(Status).includes(status)) {
-                const error = new ApiError(400, 'Invalid status value');
+                const error = new ApiError(400, 'Invalid status value. Valid status values are "Available", "Deployed", "Destroyed", "Decommissioned"');
                 throw error;
             }
 

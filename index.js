@@ -37,14 +37,14 @@ app.get('/help', (req, res) => {
     const routes = [
         { path: '/', method: 'GET', description: 'Health check and current time' },
         { path: '/help', method: 'GET', description: 'List all available routes' },
-        { path: '/register', method: 'POST', description: 'Register a new user (new user must register then login)', expectedParams: 'username, password (in body)' },
-        { path: '/login', method: 'POST', description: 'Log in an existing user (authentication token generated)', expectedParams: 'username, password (in body)' },
-        { path: '/getUsers', method: 'GET', description: 'Get all users (requires authentication)', expectedQuery: 'None', expectedParams: 'None' },
-        { path: '/gadgets', method: 'GET', description: 'Get all gadgets (requires authentication)', expectedQuery: 'status (optional)', expectedParams: 'None' },
-        { path: '/gadgets', method: 'POST', description: 'Create a new gadget (requires authentication)', expectedQuery: 'None', expectedParams: 'name (in body)' },
-        { path: '/gadgets/:id', method: 'PATCH', description: 'Update a gadget (requires authentication)', expectedQuery: 'None', expectedParams: 'id (in path), name, status (in body)' },
-        { path: '/gadgets/:id', method: 'DELETE', description: 'Decommission a gadget (requires authentication)', expectedQuery: 'None', expectedParams: 'id (in path)' },
-        { path: '/gadgets/:id/self-destruct', method: 'POST', description: 'Self-destruct a gadget (requires authentication)', expectedQuery: 'None', expectedParams: 'id (in path), confirmationCode (in body)' }
+        { path: '/api/auth/register', method: 'POST', description: 'Register a new user (new user must register then login)', expectedParams: 'username, password (in body)' },
+        { path: '/api/auth/login', method: 'POST', description: 'Log in an existing user (authentication token generated)', expectedParams: 'username, password (in body)' },
+        { path: '/api/getUsers', method: 'GET', description: 'Get all users (requires authentication)', expectedQuery: 'None', expectedParams: 'None' },
+        { path: '/api/gadgets', method: 'GET', description: 'Get all gadgets (requires authentication)', expectedQuery: 'status (optional)', expectedParams: 'None' },
+        { path: '/api/gadgets', method: 'POST', description: 'Create a new gadget (requires authentication)', expectedQuery: 'None', expectedParams: 'name (in body)' },
+        { path: '/api/gadgets/:id', method: 'PATCH', description: 'Update a gadget (requires authentication)', expectedQuery: 'None', expectedParams: 'id (in path), name, status (in body)' },
+        { path: '/api/gadgets/:id', method: 'DELETE', description: 'Decommission a gadget (requires authentication)', expectedQuery: 'None', expectedParams: 'id (in path)' },
+        { path: '/api/gadgets/:id/self-destruct', method: 'POST', description: 'Self-destruct a gadget (requires authentication)', expectedQuery: 'None', expectedParams: 'id (in path), confirmationCode (in body)' }
     ];
     res.json(routes);
 });
