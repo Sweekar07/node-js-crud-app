@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "development" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v4
+      
+    - name: Build the Docker image
+      run: docker build -t sweekarbangera/impossible_missions_force:latest .
+
+    - name: Push the Docker image
+      run: |
+        echo "${{ secrets.DOCKER_HUB_KEY }}" | docker login -u sweekarbangera --password-stdin
+        docker push sweekarbangera/impossible_missions_force:latest
