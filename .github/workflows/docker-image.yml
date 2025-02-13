@@ -43,6 +43,9 @@ jobs:
 
     - name: Check running containers
       run: docker ps -a
+
+    - name: Verify Built Images
+      run: docker images
         
     # - name: Login to Docker Hub and Push the Docker Image
     #   run: |
