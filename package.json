@@ -17,6 +17,8 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1",
     "sequelize": "^6.37.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "upraised": "file:",
     "uuid": "^11.0.5"
   }

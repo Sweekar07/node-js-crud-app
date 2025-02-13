@@ -1,4 +1,5 @@
 import express from 'express';
+import { swaggerUi, specs } from './swagger.js';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 const { json, urlencoded } = bodyParser;
@@ -20,6 +21,7 @@ app.use(urlencoded({ extended: false }));
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', "*");  // remove the cors problem
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
 
@@ -50,12 +52,14 @@ app.get('/help', (req, res) => {
 });
 
 // auth routes
-app.use('/api/auth', authRouter);
+app.use('/api', authRouter);
 // User routes
 app.use('/api', userRoutes);
 // CRUD routes
 app.use('/api', gadgetsRoutes); // imported the routes.
 
+// Serve Swagger documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // error handling
 app.use((error, req, res, next) => {

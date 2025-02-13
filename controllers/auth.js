@@ -16,7 +16,7 @@ class AuthController {
             const user = await User.create({ username, password: hashedPassword });
             res.status(201).json({ message: 'User registered successfully!', user });
         } catch (err) {
-            res.status(500).json({ error: 'Error registering user' });
+            res.status(500).json({ error: 'Error registering user', message: err.message });
         }
     }
 
