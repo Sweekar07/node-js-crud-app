@@ -52,4 +52,6 @@ jobs:
     #     echo "${{ secrets.DOCKER_HUB_KEY }}" | docker login -u sweekarbangera --password-stdin
     #     docker push sweekarbangera/impossible_missions_force:latest
     - name: Push the Docker image
-      run: docker push sweekarbangera/impossible_missions_force:latest
+      run: |
+        docker tag sweekarbangera/node_live_app:latest sweekarbangera/impossible_missions_force:latest
+        docker push sweekarbangera/impossible_missions_force:latest
