@@ -40,8 +40,13 @@ jobs:
 
     - name: Check running containers
       run: docker ps -a
+      
+    - name: Configure Docker Credential Store
+      run: |
+        mkdir -p ~/.docker
+        echo '{ "credsStore": "pass" }' > ~/.docker/config.json
 
-    - name: Push the Docker image
+    - name: Login to Docker Hub and Push the Docker Image
       run: |
         echo "${{ secrets.DOCKER_HUB_KEY }}" | docker login -u sweekarbangera --password-stdin
         docker push sweekarbangera/impossible_missions_force:latest
