@@ -12,11 +12,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
-
     - name: Set up environment variables
       run: |
         echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> $GITHUB_ENV
@@ -25,6 +20,14 @@ jobs:
         echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> $GITHUB_ENV
         echo "NODE_ENV=PROD" >> $GITHUB_ENV
         echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
+    - name: Login to Docker Hub
+      run: echo "${{ secrets.DOCKER_HUB_KEY }}" | docker login -u sweekarbangera --password-stdin
 
     - name: Build and start services
       run: docker-compose up -d --build
@@ -40,13 +43,10 @@ jobs:
 
     - name: Check running containers
       run: docker ps -a
-      
-    - name: Configure Docker Credential Store
-      run: |
-        mkdir -p ~/.docker
-        echo '{ "credsStore": "pass" }' > ~/.docker/config.json
-
-    - name: Login to Docker Hub and Push the Docker Image
-      run: |
-        echo "${{ secrets.DOCKER_HUB_KEY }}" | docker login -u sweekarbangera --password-stdin
-        docker push sweekarbangera/impossible_missions_force:latest
+        
+    # - name: Login to Docker Hub and Push the Docker Image
+    #   run: |
+    #     echo "${{ secrets.DOCKER_HUB_KEY }}" | docker login -u sweekarbangera --password-stdin
+    #     docker push sweekarbangera/impossible_missions_force:latest
+    - name: Push the Docker image
+      run: docker push sweekarbangera/impossible_missions_force:latest
