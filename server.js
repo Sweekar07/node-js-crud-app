@@ -1,6 +1,9 @@
 // server.js File 
-const express = require('express'); // Importing express module 
-const { v4: uuidv4 } = require('uuid'); // To generate unique IDs
+// It does not have any db connection it works with in memory storage as array for simplified reference.
+// It can be tested using postman with data being refreshed every time server is started.
+
+import express from 'express'; // Importing express module 
+import { v4 as uuidv4 } from 'uuid'; // To generate unique IDs
 const app = express(); // Creating an express object 
 
 const port = 8000; // Setting an port for this application 
