@@ -15,8 +15,9 @@ node_modules/
 # Ignore environment files
 .env
 
-# Ignore log files
+# Ignore log and doc files
 *.log
+*.docx
 
 # Ignore temporary files
 *.tmp

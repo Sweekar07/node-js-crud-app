@@ -1,4 +1,5 @@
 # used to define different services(i.e. containers)
+# It is used for local development purposes.
 
 services:
   node_app:
